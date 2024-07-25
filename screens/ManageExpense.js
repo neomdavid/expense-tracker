@@ -1,6 +1,6 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 const ManageExpense = () => {
-  return <Text>ManageExpense Screen</Text>;
+  return <View>ManageExpense Screen</View>;
 };
 
 export default ManageExpense;
