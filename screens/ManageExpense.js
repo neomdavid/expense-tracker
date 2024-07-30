@@ -10,12 +10,19 @@ const ManageExpense = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? "Edit Exepnse" : "Add Expense",
+      title: isEditing ? "Edit Expense" : "Add Expense",
     });
   }, [navigation, isEditing]);
 
-  function cancelHandler() {}
-  function confirmHander() {}
+  function deleteExpenseHandler() {
+    navigation.goBack();
+  }
+  function cancelHandler() {
+    navigation.goBack();
+  }
+  function confirmHander() {
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
