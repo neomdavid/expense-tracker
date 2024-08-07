@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary500,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderRadius: "6",
+    borderRadius:6,
     elevation: 3,
     shadowColor: GlobalStyles.colors.gray500,
     shadowRadius: 4,
