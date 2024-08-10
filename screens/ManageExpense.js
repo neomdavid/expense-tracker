@@ -1,9 +1,10 @@
-import { useContext, useLayoutEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import IconButton from "../components/UI/IconButton";
-import { GlobalStyles } from "../constants/styles";
-import Button from "../components/UI/Button";
-import { ExpensesContext } from "../store/expenses-context";
+import { useContext, useLayoutEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import IconButton from '../components/UI/IconButton';
+import { GlobalStyles } from '../constants/styles';
+import Button from '../components/UI/Button';
+import { ExpensesContext } from '../store/expenses-context';
+import ExpenseForm from '../components/ManageExpense.js/ExpenseForm';
 
 const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
@@ -13,7 +14,7 @@ const ManageExpense = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? "Edit Expense" : "Add Expense",
+      title: isEditing ? 'Edit Expense' : 'Add Expense',
     });
   }, [navigation, isEditing]);
 
@@ -28,28 +29,29 @@ const ManageExpense = ({ route, navigation }) => {
     if (isEditing) {
       expensesCxt.updateExpense(expenseId, {
         description: 'UPDATED!',
-        amount: 11.00,
-        date: new Date('2024-08-07') // Ensure this date is within the last 7 days
+        amount: 11.0,
+        date: new Date('2024-08-07'), // Ensure this date is within the last 7 days
       });
     } else {
       expensesCxt.addExpense({
         description: 'ADDED',
-        amount: 7.00,
-        date: new Date() // Use current date for testing
+        amount: 7.0,
+        date: new Date(), // Use current date for testing
       });
     }
     navigation.goBack();
   }
 
-//second commit
+  //second commit
   return (
     <View style={styles.container}>
+      <ExpenseForm />
       <View style={styles.buttons}>
         <Button style={styles.button} mode="flat" onPress={cancelHandler}>
           Cancel
         </Button>
         <Button style={styles.button} onPress={confirmHander}>
-          {isEditing ? "Update" : "Add"}
+          {isEditing ? 'Update' : 'Add'}
         </Button>
       </View>
       {isEditing && (
@@ -75,16 +77,16 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary800,
   },
   buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
     borderTopWidth: 2,
     borderTopColor: GlobalStyles.colors.primary200,
-    alignItems: "center",
+    alignItems: 'center',
   },
   button: {
     minWidth: 120,
