@@ -11,6 +11,9 @@ const ManageExpense = ({ route, navigation }) => {
   const isEditing = !!expenseId;
 
   const expensesCxt = useContext(ExpensesContext);
+  const selectedExpense = expensesCxt.expenses.find(
+    (expense) => expense.id === expenseId
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,19 +28,11 @@ const ManageExpense = ({ route, navigation }) => {
   function cancelHandler() {
     navigation.goBack();
   }
-  function confirmHander() {
+  function confirmHander(expenseData) {
     if (isEditing) {
-      expensesCxt.updateExpense(expenseId, {
-        description: 'UPDATED!',
-        amount: 11.0,
-        date: new Date('2024-08-07'), // Ensure this date is within the last 7 days
-      });
+      expensesCxt.updateExpense(expenseId, expenseData);
     } else {
-      expensesCxt.addExpense({
-        description: 'ADDED',
-        amount: 7.0,
-        date: new Date(), // Use current date for testing
-      });
+      expensesCxt.addExpense(expenseData);
     }
     navigation.goBack();
   }
@@ -45,15 +40,13 @@ const ManageExpense = ({ route, navigation }) => {
   //second commit
   return (
     <View style={styles.container}>
-      <ExpenseForm />
-      <View style={styles.buttons}>
-        <Button style={styles.button} mode="flat" onPress={cancelHandler}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHander}>
-          {isEditing ? 'Update' : 'Add'}
-        </Button>
-      </View>
+      <ExpenseForm
+        cancelHandler={cancelHandler}
+        submitButtonLabel={isEditing ? 'Update' : 'Add'}
+        onSubmit={confirmHander}
+        defaulValues={selectedExpense}
+      />
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -76,20 +69,12 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
   },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
     borderTopWidth: 2,
     borderTopColor: GlobalStyles.colors.primary200,
     alignItems: 'center',
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
   },
 });
