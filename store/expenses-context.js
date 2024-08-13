@@ -7,7 +7,7 @@ export const ExpensesContext = createContext({
   updateExpense: (id, { description, amount, date }) => {},
   deleteExpense: (id) => {},
 });
-
+//MINOR CHANGES
 function expenseReducer(state, action) {
   switch (action.type) {
     case 'ADD':
