@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer } from 'react';
 
+// Creating the ExpensesContext with default values
 export const ExpensesContext = createContext({
   expenses: [],
   addExpense: ({ description, amount, date }) => {},
@@ -7,15 +8,14 @@ export const ExpensesContext = createContext({
   updateExpense: (id, { description, amount, date }) => {},
   deleteExpense: (id) => {},
 });
-//MINOR CHANGES
+
+// Reducer function to manage expenses state
 function expenseReducer(state, action) {
   switch (action.type) {
     case 'ADD':
-      const id = new Date().toString + Math.random().toString;
-      console.log(id);
-      return [{ id, ...action.payload }, ...state];
+      return [...state, action.payload]; // Add new expense to the end of the array
     case 'SET':
-      return action.payload;
+      return action.payload; // Set expenses (replace the current state)
     case 'UPDATE':
       const updatableExpenseIndex = state.findIndex(
         (expense) => expense.id === action.payload.id
@@ -32,28 +32,32 @@ function expenseReducer(state, action) {
   }
 }
 
+// Context provider component
 const ExpensesContextProvider = ({ children }) => {
   const [expensesState, dispatch] = useReducer(expenseReducer, []);
 
   function addExpense(expenseData) {
     dispatch({ type: 'ADD', payload: expenseData });
   }
+
   function setExpenses(expenses) {
     dispatch({ type: 'SET', payload: expenses });
   }
+
   function updateExpense(id, expenseData) {
-    dispatch({ type: 'UPDATE', payload: { id: id, data: expenseData } });
+    dispatch({ type: 'UPDATE', payload: { id, data: expenseData } });
   }
+
   function deleteExpense(id) {
     dispatch({ type: 'DELETE', payload: id });
   }
 
   const value = {
     expenses: expensesState,
-    setExpenses: setExpenses,
-    addExpense: addExpense,
-    updateExpense: updateExpense,
-    deleteExpense: deleteExpense,
+    setExpenses,
+    addExpense,
+    updateExpense,
+    deleteExpense,
   };
 
   return (

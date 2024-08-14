@@ -1,14 +1,16 @@
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../constants/styles';
 import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense.js/ExpenseForm';
-import { storeExpense } from '../utils/http';
+import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 const ManageExpense = ({ route, navigation }) => {
   const expenseId = route.params?.expenseId;
   const isEditing = !!expenseId;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const expensesCxt = useContext(ExpensesContext);
   const selectedExpense = expensesCxt.expenses.find(
@@ -21,30 +23,37 @@ const ManageExpense = ({ route, navigation }) => {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
     expensesCxt.deleteExpense(expenseId);
+    setIsSubmitting(true);
+    await deleteExpense(expenseId);
     navigation.goBack();
   }
   function cancelHandler() {
     navigation.goBack();
   }
-  function confirmHander(expenseData) {
+  async function confirmHandler(expenseData) {
+    setIsSubmitting(true);
     if (isEditing) {
       expensesCxt.updateExpense(expenseId, expenseData);
+      await updateExpense(expenseId, expenseData);
     } else {
-      expensesCxt.addExpense(expenseData);
-      storeExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      expensesCxt.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
   }
 
+  if (isSubmitting) {
+    return <LoadingOverlay />;
+  }
   //second commit
   return (
     <View style={styles.container}>
       <ExpenseForm
         cancelHandler={cancelHandler}
         submitButtonLabel={isEditing ? 'Update' : 'Add'}
-        onSubmit={confirmHander}
+        onSubmit={confirmHandler}
         defaulValues={selectedExpense}
       />
 
